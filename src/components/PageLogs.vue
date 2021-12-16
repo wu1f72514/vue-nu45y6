@@ -5,6 +5,7 @@
     <table class="table">
       <thead>
         <tr>
+          <th></th>
           <th>Date</th>
           <th>Domaine</th>
           <th>Gravité</th>
@@ -13,10 +14,24 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="log in logs">
+        <tr v-for="log in logs" :class="log.gravity.toLowerCase()">
+          <td>
+            <i class="fas fa-times" v-if="log.gravity == 'error'"></i>
+            <i
+              class="fas fa-exclamation-triangle"
+              v-else-if="log.gravity == 'warning'"
+            ></i>
+            <i class="fas fa-info-circle" v-else-if="log.gravity == 'info'"></i>
+            <i class="fas fa-flag" v-else-if="log.gravity == 'notice'"></i>
+            <i class="fas fa-poop" v-else-if="log.gravity == 'critical'"></i>
+          </td>
           <td>{{ log.datetime }}</td>
           <td>{{ log.domain }}</td>
-          <td>{{ log.gravity }}</td>
+          <td>
+            <strong :class="log.gravity.toLowerCase()">{{
+              log.gravity.toUpperCase()
+            }}</strong>
+          </td>
           <td>{{ log.score }}</td>
           <td>{{ log.message }}</td>
         </tr>
@@ -44,7 +59,35 @@ export default {
         {
           datetime: '2019-01-01T00:00:00.000Z',
           domain: 'Apache',
+          gravity: 'critical',
+          score: 14,
+          message: 'Lorem ipsum',
+        },
+        {
+          datetime: '2019-01-01T00:00:00.000Z',
+          domain: 'Apache',
           gravity: 'error',
+          score: 14,
+          message: 'Lorem ipsum',
+        },
+        {
+          datetime: '2019-01-01T00:00:00.000Z',
+          domain: 'Apache',
+          gravity: 'warning',
+          score: 14,
+          message: 'Lorem ipsum',
+        },
+        {
+          datetime: '2019-01-01T00:00:00.000Z',
+          domain: 'Apache',
+          gravity: 'info',
+          score: 14,
+          message: 'Lorem ipsum',
+        },
+        {
+          datetime: '2019-01-01T00:00:00.000Z',
+          domain: 'Apache',
+          gravity: 'notice',
           score: 14,
           message: 'Lorem ipsum',
         },
@@ -66,7 +109,7 @@ export default {
   color: red;
 }
 .warning {
-  color: ornage;
+  color: orange;
 }
 .info {
   color: #087e8b;
