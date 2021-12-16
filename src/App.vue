@@ -6,7 +6,9 @@
         <PageParameters v-if="pageDisplayed == 'parameters'" />
         <PageSystem v-else-if="pageDisplayed == 'system'" />
         <PageLogs v-else-if="pageDisplayed == 'logs'" />
-        <PageDashboard v-else-if="pageDisplayed == 'home'" />
+        <PageDashboard
+          v-else-if="pageDisplayed == 'home' || pageDisplayed === null"
+        />
         <Page404
           v-else
           :browserHistory="browserHistory"
