@@ -30,8 +30,15 @@
           @changeValue="changeValue('filterChoiceGravity', $event)"
         />
       </div>
+      <div class="column">
+        <Text
+          label="Contient"
+          placeholder="Rechercher..."
+          :value="filterChoiceMessage"
+          @changeValue="changeValue('filterChoiceMessage', $event)"
+        />
+      </div>
     </div>
-    {{ logs }}
     <table class="table">
       <thead>
         <tr>
@@ -79,12 +86,14 @@
 <script>
 import Breadcrumb from './elements/Breadcrumb.vue';
 import Select from './form/Select.vue';
+import Text from './form/Text.vue';
 export default {
   name: 'pageLogs',
   props: {},
   components: {
     Breadcrumb,
     Select,
+    Text,
   },
   data() {
     return {
@@ -138,42 +147,54 @@ export default {
           domain: 'Apache',
           gravity: 'notice',
           score: 14,
-          message: 'Lorem ipsum',
+          message: 'Lorem ipsum test',
           visible: true,
         },
       ],
     };
   },
   mounted() {
-    let existsDates = [];
-    let existsDomains = [];
-    let existsGravities = [];
-    this.logs.forEach((logMsg) => {
-      // date
-      let d = logMsg.datetime.substr(0, 10);
-      if (existsDates.indexOf(d) == -1) {
-        this.filterDates.push({
-          value: d,
-          label: this.fmtDatetime(logMsg.datetime),
-        });
-        existsDates.push(d);
-      }
-      // domaines
-      if (existsDomains.indexOf(logMsg.domain) == -1) {
-        this.filterDomains.push({ value: logMsg.domain, label: logMsg.domain });
-        existsDomains.push(logMsg.domain);
-      }
-      // gravités
-      if (existsGravities.indexOf(logMsg.gravity) == -1) {
-        this.filterGravities.push({
-          value: logMsg.gravity,
-          label: logMsg.gravity,
-        });
-        existsGravities.push(logMsg.domain);
-      }
-    });
+    this.reloadFilters();
   },
   methods: {
+    reloadFilters() {
+      this.filterDates = [];
+      this.filterDomains = [];
+      this.filterGravities = [];
+      let existsDates = [];
+      let existsDomains = [];
+      let existsGravities = [];
+      this.logs.forEach((logMsg) => {
+        if (!logMsg.visible) {
+          return;
+        }
+        // date
+        let d = logMsg.datetime.substr(0, 10);
+        if (existsDates.indexOf(d) == -1) {
+          this.filterDates.push({
+            value: d,
+            label: this.fmtDatetime(logMsg.datetime, 'd/m/Y'),
+          });
+          existsDates.push(d);
+        }
+        // domaines
+        if (existsDomains.indexOf(logMsg.domain) == -1) {
+          this.filterDomains.push({
+            value: logMsg.domain,
+            label: logMsg.domain,
+          });
+          existsDomains.push(logMsg.domain);
+        }
+        // gravités
+        if (existsGravities.indexOf(logMsg.gravity) == -1) {
+          this.filterGravities.push({
+            value: logMsg.gravity,
+            label: logMsg.gravity.toUpperCase(),
+          });
+          existsGravities.push(logMsg.domain);
+        }
+      });
+    },
     fmtDatetime(datetime, format = 'd/m/Y h:i') {
       let w = datetime.split(' ');
       let w2 = w[0].split('-');
@@ -234,6 +255,18 @@ export default {
             mn * 1
           )
         );
+      } else if (format == 'd/m/Y') {
+        return (
+          new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
+            d * 1
+          ) +
+          '/' +
+          new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
+            m * 1
+          ) +
+          '/' +
+          y
+        );
       }
     },
     applyLogFilters() {
@@ -241,6 +274,16 @@ export default {
         // date
         if (this.filterChoiceDate !== null && this.filterChoiceDate !== '') {
           if (log.datetime.substr(0, 10) != this.filterChoiceDate) {
+            log.visible = false;
+            return;
+          }
+        }
+        // domaines
+        if (
+          this.filterChoiceDomain !== null &&
+          this.filterChoiceDomain !== ''
+        ) {
+          if (log.domain != this.filterChoiceDomain) {
             log.visible = false;
             return;
           }
@@ -255,6 +298,20 @@ export default {
             return;
           }
         }
+        // message
+        if (
+          this.filterChoiceMessage !== null &&
+          this.filterChoiceMessage !== ''
+        ) {
+          if (
+            log.message
+              .toLowerCase()
+              .indexOf(this.filterChoiceMessage.toLowerCase()) === -1
+          ) {
+            log.visible = false;
+            return;
+          }
+        }
 
         log.visible = true;
       });
@@ -262,6 +319,7 @@ export default {
     changeValue: function (varN, value) {
       this[varN] = value;
       this.applyLogFilters();
+      this.reloadFilters();
     },
   },
 };
