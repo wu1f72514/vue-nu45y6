@@ -2,16 +2,36 @@
   <div class="container is-fluid">
     <Breadcrumb :items="breadcrumbItems" />
     <h2 class="title">Logs</h2>
-
-    <Select
-      label="Date"
-      placeholder="Filtrer par date"
-      :values="filterDates"
-      :value="filterChoiceDate"
-      @changeValue="changeValue('filterChoiceDate', $event)"
-    />
-    {{ filterDomains }}
-    {{ filterGravities }}
+    <div class="columns">
+      <div class="column">
+        <Select
+          label="Date"
+          placeholder="Filtrer par date"
+          :values="filterDates"
+          :value="filterChoiceDate"
+          @changeValue="changeValue('filterChoiceDate', $event)"
+        />
+      </div>
+      <div class="column">
+        <Select
+          label="Domaines"
+          placeholder="Filtrer par domaine"
+          :values="filterDomains"
+          :value="filterChoiceDomain"
+          @changeValue="changeValue('filterChoiceDomain', $event)"
+        />
+      </div>
+      <div class="column">
+        <Select
+          label="Gravité"
+          placeholder="Filtrer par gravité"
+          :values="filterGravities"
+          :value="filterChoiceGravity"
+          @changeValue="changeValue('filterChoiceGravity', $event)"
+        />
+      </div>
+    </div>
+    {{ logs }}
     <table class="table">
       <thead>
         <tr>
@@ -24,7 +44,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="log in logs" :class="log.gravity.toLowerCase()">
+        <tr
+          v-for="log in logs"
+          :class="log.gravity.toLowerCase()"
+          :style="!log.visible ? 'display:none;' : ''"
+        >
           <td>
             <i class="fas fa-times" v-if="log.gravity == 'error'"></i>
             <i
@@ -78,39 +102,44 @@ export default {
       filterChoiceMessage: null,
       logs: [
         {
-          datetime: '2019-01-01T00:00:00.000Z',
+          datetime: '2021-01-02 12:34:56.789012',
           domain: 'Apache',
           gravity: 'critical',
           score: 14,
           message: 'Lorem ipsum',
+          visible: true,
         },
         {
-          datetime: '2019-01-01T00:00:00.000Z',
+          datetime: '2019-03-01 00:00:00.000000',
           domain: 'Apache',
           gravity: 'error',
           score: 14,
           message: 'Lorem ipsum',
+          visible: true,
         },
         {
-          datetime: '2019-01-01T00:00:00.000Z',
+          datetime: '2019-03-01 00:00:00.000000',
           domain: 'Apache',
           gravity: 'warning',
           score: 14,
           message: 'Lorem ipsum',
+          visible: true,
         },
         {
-          datetime: '2019-01-01T00:00:00.000Z',
+          datetime: '2019-03-01 00:00:00.000000',
           domain: 'Nginx',
           gravity: 'info',
           score: 14,
           message: 'Lorem ipsum',
+          visible: true,
         },
         {
-          datetime: '2019-01-01T00:00:00.000Z',
+          datetime: '2019-01-01 00:00:00.000000',
           domain: 'Apache',
           gravity: 'notice',
           score: 14,
           message: 'Lorem ipsum',
+          visible: true,
         },
       ],
     };
@@ -143,59 +172,93 @@ export default {
   },
   methods: {
     fmtDatetime(datetime, format = 'd/m/Y h:i') {
-      let d = new Date(datetime);
+      let w = datetime.split(' ');
+      let w2 = w[0].split('-');
+      let w3 = w[1].split('.');
+      let w4 = w3[0].split(':');
+      let y = w2[0];
+      let m = w2[1];
+      let d = w2[2];
+      let h = w4[0];
+      let mn = w4[1];
+      let s = w4[2];
+      let ms = w3[1];
       if (format == 'd/m/Y h:i:s ms') {
         return (
           new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
-            d.getDay()
+            d * 1
           ) +
           '/' +
           new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
-            d.getMonth() + 1
+            m * 1
           ) +
           '/' +
-          d.getFullYear() +
+          y +
           ' ' +
           new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
-            d.getHours()
+            h * 1
           ) +
           ':' +
           new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
-            d.getMinutes()
+            mn * 1
           ) +
           ':' +
           new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
-            d.getSeconds()
+            s * 1
           ) +
           ' ' +
           new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 6 }).format(
-            d.getMilliseconds()
+            ms * 1
           )
         );
       } else if (format == 'd/m/Y h:i') {
         return (
           new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
-            d.getDay()
+            d * 1
           ) +
           '/' +
           new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
-            d.getMonth() + 1
+            m * 1
           ) +
           '/' +
-          d.getFullYear() +
+          y +
           ' ' +
           new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
-            d.getHours()
+            h*1
           ) +
           ':' +
           new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
-            d.getMinutes()
+            mn*1
           )
         );
       }
     },
+    applyLogFilters() {
+      this.logs.forEach((log) => {
+        // date
+        if (this.filterChoiceDate !== null && this.filterChoiceDate !== '') {
+          if (log.datetime.substr(0, 10) != this.filterChoiceDate) {
+            log.visible = false;
+            return;
+          }
+        }
+        // gravité
+        if (
+          this.filterChoiceGravity !== null &&
+          this.filterChoiceGravity !== ''
+        ) {
+          if (log.gravity != this.filterChoiceGravity) {
+            log.visible = false;
+            return;
+          }
+        }
+
+        log.visible = true;
+      });
+    },
     changeValue: function (varN, value) {
       this[varN] = value;
+      this.applyLogFilters();
     },
   },
 };

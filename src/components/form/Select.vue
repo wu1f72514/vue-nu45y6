@@ -9,6 +9,7 @@
           :disabled="!enable"
           @change="saveOnChange"
         >
+          <option value="" v-if="blank"></option>
           <option
             v-for="value in values"
             :value="value.value"
@@ -47,6 +48,10 @@ export default {
     value: {
       type: String,
       default: '',
+    },
+    blank: {
+      type: Boolean,
+      default: true,
     },
     changeValue: {
       type: Object,
