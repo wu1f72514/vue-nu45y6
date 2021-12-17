@@ -93,6 +93,7 @@
             <pagination
               :nbPages="20"
               :current="currentPage"
+              :manageCesure="false"
               @changeValue="changePage($event)"
             />
           </td>

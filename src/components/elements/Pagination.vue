@@ -16,6 +16,7 @@
           :data-page="i"
           @click="changePageClick"
           v-if="
+            manageCesure === false ||
             startMiddleGroup === null ||
             (i * 1 > startMiddleGroup && i * 1 < startMiddleGroup * 2 - 1) ||
             i * 1 === 1 ||
@@ -52,6 +53,10 @@ export default {
       type: Object,
       default: null,
     },
+    manageCesure: {
+      type: Boolean,
+      default: true,
+    },
   },
   components: {},
   data() {
@@ -64,7 +69,7 @@ export default {
   mounted() {
     // TODO qd changement de page changer la composition des chiffres cliquables
     this.pageC = this.page;
-    if (this.nbPages >= this.nbSliceMiddleShown * 2) {
+    if (this.manageCesure && this.nbPages >= this.nbSliceMiddleShown * 2) {
       this.startMiddleGroup = Math.floor(
         (this.nbPages - this.nbSliceMiddleShown) / 2
       );
@@ -73,7 +78,6 @@ export default {
   methods: {
     changePageClick(e) {
       this.pageC = e.target.dataset.page;
-      console.log(this.pageC);
 
       // propagation de la nouvelle valeur
       this.$emit('changePage', this.pageC);
