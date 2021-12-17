@@ -2,6 +2,17 @@
   <div class="container is-fluid">
     <Breadcrumb :items="breadcrumbItems" />
     <h2 class="title">Logs</h2>
+
+    <Select
+      label="Date"
+      placeholder="Filtrer par date"
+      :values="filterDates"
+      :value="filterChoiceDate"
+      @changeValue="changeValue('filterChoiceDate', $event)"
+    />
+    {{}}
+    {{ filterDomains }}
+    {{ filterGravities }}
     <table class="table">
       <thead>
         <tr>
@@ -44,11 +55,13 @@
 
 <script>
 import Breadcrumb from './elements/Breadcrumb.vue';
+import Select from './form/Select.vue';
 export default {
   name: 'pageLogs',
   props: {},
   components: {
     Breadcrumb,
+    Select,
   },
   data() {
     return {
@@ -58,12 +71,12 @@ export default {
       ],
       updateMode: true,
       filterDates: [],
-      filterChoiceDates: null,
+      filterChoiceDate: null,
       filterDomains: [],
-      filterChoiceDomains: null,
+      filterChoiceDomain: null,
       filterGravities: [],
-      filterChoiceGravities: null,
-      filterChoiceMessages: null,
+      filterChoiceGravity: null,
+      filterChoiceMessage: null,
       logs: [
         {
           datetime: '2019-01-01T00:00:00.000Z',
@@ -102,6 +115,23 @@ export default {
         },
       ],
     };
+  },
+  mounted() {
+    this.logs.forEach((logMsg) => {
+      // date
+      let d = logMsg.datetime.substr(0, 10);
+      if (this.filterDates.indexOf(d) == -1) {
+        this.filterDates.push(d);
+      }
+      // domaines
+      if (this.filterDomains.indexOf(logMsg.domain) == -1) {
+        this.filterDomains.push(logMsg.domain);
+      }
+      // gravités
+      if (this.filterGravities.indexOf(logMsg.gravity) == -1) {
+        this.filterGravities.push(logMsg.gravity);
+      }
+    });
   },
   methods: {
     fmtDatetime(datetime, format = 'd/m/Y h:i') {
@@ -155,6 +185,9 @@ export default {
           )
         );
       }
+    },
+    changeValue: function (varN, value) {
+      this[varN] = value;
     },
   },
 };
