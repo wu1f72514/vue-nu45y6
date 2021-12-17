@@ -38,6 +38,9 @@
           @changeValue="changeValue('filterChoiceMessage', $event)"
         />
       </div>
+      <div class="column">
+        <button class="button is-light" @click="razFilters">RAZ</button>
+      </div>
     </div>
     <table class="table">
       <thead>
@@ -157,6 +160,14 @@ export default {
     this.reloadFilters();
   },
   methods: {
+    razFilters() {
+      alert('rd');
+      this.filterChoiceDate = null;
+      this.filterChoiceDomain = null;
+      this.filterChoiceGravity = null;
+      this.filterChoiceMessage = null;
+      this.reloadFilters();
+    },
     reloadFilters() {
       this.filterDates = [];
       this.filterDomains = [];
