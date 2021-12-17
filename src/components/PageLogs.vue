@@ -87,6 +87,17 @@
           <td>{{ log.message }}</td>
         </tr>
       </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="6">
+            <pagination
+              :nbPages="20"
+              :current="currentPage"
+              @changeValue="changePage($event)"
+            />
+          </td>
+        </tr>
+      </tfoot>
     </table>
   </div>
 </template>
@@ -95,6 +106,7 @@
 import Breadcrumb from './elements/Breadcrumb.vue';
 import Select from './form/Select.vue';
 import Text from './form/Text.vue';
+import Pagination from './elements/Pagination.vue';
 export default {
   name: 'pageLogs',
   props: {},
@@ -102,6 +114,7 @@ export default {
     Breadcrumb,
     Select,
     Text,
+    Pagination,
   },
   data() {
     return {
@@ -159,6 +172,7 @@ export default {
           visible: true,
         },
       ],
+      currentPage: 1,
     };
   },
   mounted() {
@@ -330,6 +344,9 @@ export default {
         this.applyLogFilters();
         this.reloadFilters();
       }
+    },
+    changePage: function (newPage) {
+      this.currentPage = newPage;
     },
   },
 };
