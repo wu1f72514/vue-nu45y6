@@ -27,7 +27,32 @@
 import ActivityTag from '../elements/ActivityTag.vue';
 export default {
   name: 'Select',
-  props: ['label', 'placeholder', 'enable', 'values', 'value', 'changeValue'],
+  props: {
+    label: {
+      type: String,
+      default: '',
+    },
+    placeholder: {
+      type: String,
+      default: null,
+    },
+    enable: {
+      type: Boolean,
+      default: true,
+    },
+    values: {
+      type: Array,
+      default: [],
+    },
+    value: {
+      type: String,
+      default: '',
+    },
+    changeValue: {
+      type: Object,
+      default: null,
+    },
+  },
   components: {
     ActivityTag,
   },

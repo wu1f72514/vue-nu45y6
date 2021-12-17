@@ -10,7 +10,6 @@
       :value="filterChoiceDate"
       @changeValue="changeValue('filterChoiceDate', $event)"
     />
-    {{}}
     {{ filterDomains }}
     {{ filterGravities }}
     <table class="table">
@@ -117,19 +116,28 @@ export default {
     };
   },
   mounted() {
+    let existsDates = [];
+    let existsDomains = [];
+    let existsGravities = [];
     this.logs.forEach((logMsg) => {
       // date
       let d = logMsg.datetime.substr(0, 10);
-      if (this.filterDates.indexOf(d) == -1) {
-        this.filterDates.push(d);
+      if (existsDates.indexOf(d) == -1) {
+        this.filterDates.push({ value: d, label: d });
+        existsDates.push(d);
       }
       // domaines
-      if (this.filterDomains.indexOf(logMsg.domain) == -1) {
-        this.filterDomains.push(logMsg.domain);
+      if (existsDomains.indexOf(logMsg.domain) == -1) {
+        this.filterDomains.push({ value: logMsg.domain, label: logMsg.domain });
+        existsDomains.push(logMsg.domain);
       }
       // gravités
-      if (this.filterGravities.indexOf(logMsg.gravity) == -1) {
-        this.filterGravities.push(logMsg.gravity);
+      if (existsGravities.indexOf(logMsg.gravity) == -1) {
+        this.filterGravities.push({
+          value: logMsg.gravity,
+          label: logMsg.gravity,
+        });
+        existsGravities.push(logMsg.domain);
       }
     });
   },
