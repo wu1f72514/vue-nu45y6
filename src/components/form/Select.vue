@@ -20,7 +20,7 @@
         </select>
       </div>
     </div>
-    <Activity-tag :status="status" />
+    <Activity-tag :status="status" v-if="activityTag" />
   </div>
 </template>
 
@@ -50,6 +50,10 @@ export default {
       default: '',
     },
     blank: {
+      type: Boolean,
+      default: true,
+    },
+    activityTag: {
       type: Boolean,
       default: true,
     },

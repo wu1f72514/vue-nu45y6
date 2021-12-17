@@ -9,6 +9,8 @@
           placeholder="Filtrer par date"
           :values="filterDates"
           :value="filterChoiceDate"
+          id="filterDate"
+          activityTag="false"
           @changeValue="changeValue('filterChoiceDate', $event)"
         />
       </div>
@@ -18,6 +20,8 @@
           placeholder="Filtrer par domaine"
           :values="filterDomains"
           :value="filterChoiceDomain"
+          id="filterDomain"
+          activityTag="false"
           @changeValue="changeValue('filterChoiceDomain', $event)"
         />
       </div>
@@ -27,6 +31,8 @@
           placeholder="Filtrer par gravité"
           :values="filterGravities"
           :value="filterChoiceGravity"
+          id="filterGravity"
+          activityTag="false"
           @changeValue="changeValue('filterChoiceGravity', $event)"
         />
       </div>
@@ -35,11 +41,10 @@
           label="Contient"
           placeholder="Rechercher..."
           :value="filterChoiceMessage"
+          id="filterMessage"
+          activityTag="false"
           @changeValue="changeValue('filterChoiceMessage', $event)"
         />
-      </div>
-      <div class="column">
-        <button class="button is-light" @click="razFilters">RAZ</button>
       </div>
     </div>
     <table class="table">
@@ -160,14 +165,6 @@ export default {
     this.reloadFilters();
   },
   methods: {
-    razFilters() {
-      alert('rd');
-      this.filterChoiceDate = null;
-      this.filterChoiceDomain = null;
-      this.filterChoiceGravity = null;
-      this.filterChoiceMessage = null;
-      this.reloadFilters();
-    },
     reloadFilters() {
       this.filterDates = [];
       this.filterDomains = [];
@@ -327,10 +324,12 @@ export default {
         log.visible = true;
       });
     },
-    changeValue: function (varN, value) {
+    changeValue: function (varN, value, refreshFilters = true) {
       this[varN] = value;
-      this.applyLogFilters();
-      this.reloadFilters();
+      if (refreshFilters) {
+        this.applyLogFilters();
+        this.reloadFilters();
+      }
     },
   },
 };

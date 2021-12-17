@@ -14,7 +14,7 @@
         @change="saveOnChange"
       />
     </div>
-    <Activity-tag :status="status" />
+    <Activity-tag :status="status" v-if="activityTag" />
   </div>
 </template>
 
@@ -50,6 +50,10 @@ export default {
     value: {
       type: String,
       default: '',
+    },
+    activityTag: {
+      type: Boolean,
+      default: true,
     },
     changeValue: {
       type: Object,
