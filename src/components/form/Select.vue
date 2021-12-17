@@ -1,5 +1,6 @@
 <template>
   <div class="field">
+    {{ activityTag }}
     <label class="label" :for="idGen" v-if="label !== ''">{{ label }}</label>
     <div class="control">
       <div class="select">

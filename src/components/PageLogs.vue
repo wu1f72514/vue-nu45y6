@@ -10,7 +10,7 @@
           :values="filterDates"
           :value="filterChoiceDate"
           id="filterDate"
-          activityTag="false"
+          :activityTag="false"
           @changeValue="changeValue('filterChoiceDate', $event)"
         />
       </div>
@@ -21,7 +21,7 @@
           :values="filterDomains"
           :value="filterChoiceDomain"
           id="filterDomain"
-          activityTag="false"
+          :activityTag="false"
           @changeValue="changeValue('filterChoiceDomain', $event)"
         />
       </div>
@@ -32,7 +32,7 @@
           :values="filterGravities"
           :value="filterChoiceGravity"
           id="filterGravity"
-          activityTag="false"
+          :activityTag="false"
           @changeValue="changeValue('filterChoiceGravity', $event)"
         />
       </div>
@@ -42,7 +42,7 @@
           placeholder="Rechercher..."
           :value="filterChoiceMessage"
           id="filterMessage"
-          activityTag="false"
+          :activityTag="false"
           @changeValue="changeValue('filterChoiceMessage', $event)"
         />
       </div>
