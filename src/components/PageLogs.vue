@@ -25,7 +25,9 @@
             <i class="fas fa-flag" v-else-if="log.gravity == 'notice'"></i>
             <i class="fas fa-poop" v-else-if="log.gravity == 'critical'"></i>
           </td>
-          <td>{{ log.datetime }}</td>
+          <td :title="fmtDatetime(log.datetime, 'd/m/Y h:i:s ms')">
+            {{ fmtDatetime(log.datetime) }}
+          </td>
           <td>{{ log.domain }}</td>
           <td>
             <strong :class="log.gravity.toLowerCase()">{{
@@ -55,6 +57,13 @@ export default {
         { text: 'Logs', href: '#logs', active: true },
       ],
       updateMode: true,
+      filterDates: [],
+      filterChoiceDates: null,
+      filterDomains: [],
+      filterChoiceDomains: null,
+      filterGravities: [],
+      filterChoiceGravities: null,
+      filterChoiceMessages: null,
       logs: [
         {
           datetime: '2019-01-01T00:00:00.000Z',
@@ -79,7 +88,7 @@ export default {
         },
         {
           datetime: '2019-01-01T00:00:00.000Z',
-          domain: 'Apache',
+          domain: 'Nginx',
           gravity: 'info',
           score: 14,
           message: 'Lorem ipsum',
@@ -94,7 +103,60 @@ export default {
       ],
     };
   },
-  methods: {},
+  methods: {
+    fmtDatetime(datetime, format = 'd/m/Y h:i') {
+      let d = new Date(datetime);
+      if (format == 'd/m/Y h:i:s ms') {
+        return (
+          new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
+            d.getDay()
+          ) +
+          '/' +
+          new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
+            d.getMonth() + 1
+          ) +
+          '/' +
+          d.getFullYear() +
+          ' ' +
+          new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
+            d.getHours()
+          ) +
+          ':' +
+          new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
+            d.getMinutes()
+          ) +
+          ':' +
+          new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
+            d.getSeconds()
+          ) +
+          ' ' +
+          new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 6 }).format(
+            d.getMilliseconds()
+          )
+        );
+      } else if (format == 'd/m/Y h:i') {
+        return (
+          new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
+            d.getDay()
+          ) +
+          '/' +
+          new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
+            d.getMonth() + 1
+          ) +
+          '/' +
+          d.getFullYear() +
+          ' ' +
+          new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
+            d.getHours()
+          ) +
+          ':' +
+          new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
+            d.getMinutes()
+          )
+        );
+      }
+    },
+  },
 };
 </script>
 
