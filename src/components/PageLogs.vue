@@ -152,7 +152,10 @@ export default {
       // date
       let d = logMsg.datetime.substr(0, 10);
       if (existsDates.indexOf(d) == -1) {
-        this.filterDates.push({ value: d, label: d });
+        this.filterDates.push({
+          value: d,
+          label: this.fmtDatetime(logMsg.datetime),
+        });
         existsDates.push(d);
       }
       // domaines
@@ -224,11 +227,11 @@ export default {
           y +
           ' ' +
           new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
-            h*1
+            h * 1
           ) +
           ':' +
           new Intl.NumberFormat('fr-FR', { minimumIntegerDigits: 2 }).format(
-            mn*1
+            mn * 1
           )
         );
       }
